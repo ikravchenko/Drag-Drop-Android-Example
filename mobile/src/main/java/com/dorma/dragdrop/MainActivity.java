@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -53,17 +54,38 @@ public class MainActivity extends ActionBarActivity {
         });
         inputView.setOnDragListener(new View.OnDragListener() {
             @Override
-            public boolean onDrag(View v, DragEvent event) {
+            public boolean onDrag(final View v, DragEvent event) {
                 Log.d("Dragging", event.toString());
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_ENTERED:
-                        v.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                        YoYo.with(Techniques.Shake).duration(300).playOn(v);
                         break;
                     case DragEvent.ACTION_DRAG_EXITED:
-                        v.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
+                        YoYo.with(Techniques.Shake).duration(300).playOn(v);
                         break;
                     case DragEvent.ACTION_DROP:
-                        v.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                        YoYo.with(Techniques.Flash).duration(500).withListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+                                ((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(animation.getDuration());
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                v.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        }).playOn(v);
+
                         break;
                 }
                 return true;
