@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -20,6 +23,8 @@ import com.nineoldandroids.animation.Animator;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnLongClick;
+import butterknife.OnTouch;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
     Toolbar toolbar;
     @InjectView(R.id.inputView)
     View inputView;
-//    @InjectView(R.id.target_view)
+    @InjectView(R.id.target_view)
     TargetView targetView;
     @InjectView(R.id.main_container)
     ViewGroup mainContainer;
@@ -50,8 +55,31 @@ public class MainActivity extends ActionBarActivity {
                 animatorSet.start();
             }
         });
+        inputView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                Log.d("Dragging", event.toString());
+                switch (event.getAction()) {
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        v.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        v.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        v.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
+    @OnLongClick(R.id.target_view)
+    public boolean onTargetSelected(View view) {
+        targetView.startDrag(null, new View.DragShadowBuilder(targetView), null, 0);
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
