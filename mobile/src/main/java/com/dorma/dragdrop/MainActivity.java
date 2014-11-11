@@ -33,10 +33,6 @@ public class MainActivity extends ActionBarActivity {
     Toolbar toolbar;
     @InjectView(R.id.inputView)
     View inputView;
-    @InjectView(R.id.target_view)
-    TargetView targetView;
-    @InjectView(R.id.main_container)
-    ViewGroup mainContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
 
     @OnLongClick(R.id.target_view)
     public boolean onTargetSelected(View view) {
-        targetView.startDrag(null, new View.DragShadowBuilder(targetView), null, 0);
+        view.startDrag(null, new View.DragShadowBuilder(view), null, 0);
         return true;
     }
 
